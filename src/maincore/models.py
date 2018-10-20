@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import ValidationError
-from maincore import create_model
+from . import create_model
 
 class App(models.Model):
     name = models.CharField(max_length=255)
@@ -29,7 +29,7 @@ class Model(models.Model):
     class Meta:
         unique_together = (('app', 'name'),)
 
-def is_valid_field(self, field_data, all_data):
+def is_valid_field(field_data, *args, **kwargs):
     if hasattr(models, field_data) and issubclass(getattr(models, field_data), models.Field):
         # It exists and is a proper field type
         return
@@ -62,7 +62,7 @@ class Setting(models.Model):
 
 '''
 from maincore import create_model, create_install_model
-model = create_install_model('Empty', app_label='dynamic')
+model = create_install_model('weblog', app_label='dynamic')
 from maincore.models import Model
 model = Model.objects.get(app__name='fake_project', name='FakeModel')
 '''

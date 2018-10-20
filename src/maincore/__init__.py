@@ -47,7 +47,7 @@ def create_install_model(*args, **kwargs):
 
 
 def install(model):
-    from django.core.management import sql, color
+    # from django.core.management import sql, color
     from django.db import connection
 
     # Standard syncdb expects models to be in reliable locations,
@@ -59,9 +59,17 @@ def install(model):
     # This installs only the basic table definition.
 
     # disable terminal colors in the sql statements
-    style = color.no_style()
 
-    cursor = connection.cursor()
-    statements, pending = sql.sql_model_create(model, style)
-    for sql in statements:
-        cursor.execute(sql)
+    with connection.schema_editor() as editor:
+        editor.create_model(model)
+    # style = color.no_style()
+    #
+    # cursor = connection.cursor()
+    # statements, pending = sql.sql_model_create(model, style)
+    # for sql in statements:
+    #     cursor.execute(sql)
+
+__all__ = [
+    'create_model',
+    'install'
+]
