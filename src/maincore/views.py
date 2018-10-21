@@ -40,17 +40,6 @@ class FieldViewList(View):
 
 class FieldOptionsViewList(View):
 
-    def get_options(self):
-        from django.db import models
-        props = dir(models)
-        options = list()
-        for prop in props:
-            try:
-                if issubclass(getattr(models, prop), models.Field):
-                    options.append(prop)
-            except Exception as e:
-                pass
-        return options
-
     def get(self, request):
-        return JsonResponse(self.get_options(), safe=False)
+        from maincore.utils import get_valid_fields
+        return JsonResponse(get_valid_fields(), safe=False)

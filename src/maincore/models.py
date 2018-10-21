@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import ValidationError
 from . import create_model, install
 from uuid import uuid4
+from maincore.utils import get_valid_fields, choice_fields
 
 
 class App(models.Model):
@@ -49,11 +50,16 @@ def is_valid_field(field_data, *args, **kwargs):
         return
     raise ValidationError("%s no es un tipo de campo válido" % field_data)
 
+
+
+
 class Field(models.Model):
     uid = models.UUIDField(default=uuid4)
     model = models.ForeignKey(Model, related_name='fields', on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=255)
-    type = models.CharField(max_length=255, validators=[is_valid_field])
+    type = models.CharField(
+        max_length=255,
+        validators=[is_valid_field], choices=choice_fields)
 
     def save(self, *args, **kwargs):
         from django.template.defaultfilters import slugify
