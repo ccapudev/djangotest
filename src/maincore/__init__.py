@@ -36,7 +36,6 @@ def create_model(name, fields=None, app_label='', module='', options=None, admin
         for key, value in admin_opts:
             setattr(Admin, key, value)
         admin.site.register(model, Admin)
-
     return model
 
 
@@ -61,6 +60,8 @@ def install(model):
     # disable terminal colors in the sql statements
 
     with connection.schema_editor() as editor:
+        print(editor)
+        print(dir(editor))
         editor.create_model(model)
     # style = color.no_style()
     #
